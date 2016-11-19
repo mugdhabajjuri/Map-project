@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neighbourhood Map</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="list-box">
+            <h1>Places of interest</h1>
+            <hr>
+        <div id="list">
+                <ul id="place-list" data-bind= 'foreach: LocationList()'>
+                    <li class="list-items" data-bind= 'text: areaName, visible: listVisible, attr: {id: areaId}, click: $parent.displayDetails'>
+                    </li>
+                </ul>
+                <hr><h3>Wikipedia Description</h3>
+            <div data-bind= 'foreach: LocationList()'>
+                <div class="info" data-bind= 'visible: wikiVisible, attr: {id: divId}'>
+                    <span id="wiki" data-bind= 'text: wikiDescription'></span>
+                    <p data-bind= 'visible: wikisrc'>(Source: Wikipedia)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="map"></div>
+</div>
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/knockout-3.2.0.js"></script>
+    <script src="js/app.js"></script>
+    <script async defer
+        src=
+        "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyBMnF9xecU8CCgQW4gdDHj5wTg6JaZcOoA&v=3&callback=initMap">
+    </script>
+</body>
+</html>
