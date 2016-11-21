@@ -1,12 +1,15 @@
-//Model for storing location info
+//Declaring global variables
 var map;
 var markers = [];
+var clientID;
+var clientSecret;
 
 //Error handling for Google Maps API
 var maperror = setTimeout(function() {
     alert("can not load maps now. check your network");
     $('#map').append('<h1>Can not load Google maps now, check your network connection</h1>');
 }, 5000);
+//Model for storing location info
 var locations = [
     {
         area: 'Railway station',
@@ -108,13 +111,16 @@ var ViewModel = function() {
         self.LocationList.push(new Location(area));
     });
 
+    clientID = "V443OTCAQPJLCRY4QWBFYN3ZK5FDKGJOYDHLMI3O342IRVNN";
+    clientSecret = "AK1JHLEG2D2KW14WF5HYVFNTUYFTBXYS4LDUUNRAHPR5URLB";
+
     //This function displays description of places obtained from Wikipedia
     this.displayDetails = function(thisPlace) {
         self.displayWikiDetails(this);
         clickList(this.serialNum());
     };
 
-    markerDisplayDetails = function(thisId) {
+    markerDetails = function(thisId) {
         self.LocationList().forEach(function(place) {
             if(thisId === place.serialNum()) {
                 self.displayWikiDetails(place);
@@ -180,11 +186,9 @@ function initMap() {
         marker.addListener('click', function() {
             generateInfoWindow(this, Infowindow);
             markerAnimation(this);
-            markerDisplayDetails(this.id);
+            markerDetails(this.id);
         });
     }
-
-
     //Animate marker when respective list item is clicked
     clickList = function(markerId) {
             var newMarker = markers[markerId];
@@ -192,26 +196,23 @@ function initMap() {
             generateInfoWindow(newMarker, Infowindow);
     };
 
-    function generateInfoWindow(marker, infowindow) {
-        if (infowindow.marker != marker) {
-            infowindow.setContent('');
-            infowindow.marker = marker;
-            infowindow.addListener('closeclick', function() {
-                infowindow.marker = null;
+    function generateInfoWindow(newmarker, newinfowindow) {
+        if (newinfowindow.newmarker != newmarker) {
+            newinfowindow.setContent('');
+            newinfowindow.newmarker = newmarker;
+            newinfowindow.addListener('closeclick', function() {
+                newinfowindow.newmarker = null;
             });
             var streetViewService = new google.maps.StreetViewService();
             var radius = 100;
-            // In case the status is OK, which means the pano was found, compute the
-            // position of the streetview image, then calculate the heading, then get a
-            // panorama from that and set the options
             function getStreetView(data, status) {
                 if (status == google.maps.StreetViewStatus.OK) {
-                    var nearStreetViewLocation = data.location.latLng;
+                    var StreetViewLocation = data.location.latLng;
                     var heading = google.maps.geometry.spherical.computeHeading(
-                        nearStreetViewLocation, marker.position);
-                    infowindow.setContent('<div>' + marker.title + '</div><div>hi</div><div id="pano"></div>');
+                        StreetViewLocation, newmarker.position);
+                    newinfowindow.setContent('<div>' + newmarker.title + '</div><div>hi</div><div id="pano"></div>');
                     var panoramaOptions = {
-                        position: nearStreetViewLocation,
+                        position: StreetViewLocation,
                         pov: {
                             heading: heading - 60,
                             pitch: 30
@@ -220,26 +221,24 @@ function initMap() {
                     var panorama = new google.maps.StreetViewPanorama(
                         document.getElementById('pano'), panoramaOptions);
                 } else {
-                    infowindow.setContent('<div>' + marker.title + '</div>' +
+                    newinfowindow.setContent('<div>' + newmarker.title + '</div>' +
                         '<div>(No Street View Found)</div>');
                 }
             }
-            // Use streetview service to get the closest streetview image within
-            // 100 meters of the markers position
-            streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+            streetViewService.getPanoramaByLocation(newmarker.position, radius, getStreetView);
             // Open the infowindow on the correct marker.
-            infowindow.open(map, marker);
+            newinfowindow.open(map, newmarker);
         }
     }
 
     //Add bounce animation to markers
-    function markerAnimation(marker) {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        stopAnimation(marker);
+    function markerAnimation(newmarker) {
+        newmarker.setAnimation(google.maps.Animation.BOUNCE);
+        stopAnimation(newmarker);
 
-        function stopAnimation(marker) {
+        function stopAnimation(newmarker) {
             setTimeout(function () {
-                marker.setAnimation(null);
+                newmarker.setAnimation(null);
             }, 1000);
         }
     }
