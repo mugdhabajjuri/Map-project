@@ -65,6 +65,7 @@ var Location = function(data) {
         return div;
     }, this);
     this.serialNum = ko.observable(data.serialNum);
+    this.visible = ko.observable(true);
 
     //The elements array will contain the short description of places obtained from Wikipedia
     this.elements = ko.observableArray([]);
@@ -98,18 +99,36 @@ var Location = function(data) {
     }, this);
 
     this.wikiDescription = ko.observable('');
-    this.listVisible = ko.observable(true);
     this.wikiVisible = ko.observable(false);
 };
 
 var ViewModel = function() {
     var self = this;
+    this.searchTerm = ko.observable("");
     //Clearing localstorage when the page loads
     localStorage.removeItem('alerted');
     this.LocationList = ko.observableArray([]);
     locations.forEach(function(area) {
         self.LocationList.push(new Location(area));
     });
+
+    this.filteredList = ko.computed( function() {
+        var filter = self.searchTerm().toLowerCase();
+        if (!filter) {
+            self.LocationList().forEach(function(locationItem){
+                locationItem.visible(true);
+            });
+            return self.LocationList();
+        } else {
+            return ko.utils.arrayFilter(self.LocationList(), function(locationItem) {
+                var string = locationItem.areaName.toLowerCase();
+                var result = (string.search(filter) >= 0);
+                locationItem.visible(result);
+                return result;
+            });
+        }
+    }, self);
+
 
     clientID = "V443OTCAQPJLCRY4QWBFYN3ZK5FDKGJOYDHLMI3O342IRVNN";
     clientSecret = "AK1JHLEG2D2KW14WF5HYVFNTUYFTBXYS4LDUUNRAHPR5URLB";

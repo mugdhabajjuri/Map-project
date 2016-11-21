@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Neighbourhood Map</title>
+    <title>Neighbourhood Map Hyderabad</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
@@ -11,12 +11,12 @@
     <div class="list-box">
             <h1>Places of interest</h1>
             <div class="search" id="search">
-                <input class="search-box"/>
+                <input class="search-box" data-bind="textInput: searchTerm, valueUpdate: 'afterkeydown'"/>
             </div>
             <hr>
         <div id="list">
                 <ul id="place-list" data-bind= 'foreach: LocationList()'>
-                    <li class="list-items" data-bind= 'text: areaName, visible: listVisible, attr: {id: areaId}, click: $parent.displayDetails'>
+                    <li class="list-items" data-bind= 'text: areaName, attr: {id: areaId}, click: $parent.displayDetails'>
                     </li>
                 </ul>
                 <hr><h3>Wikipedia Description</h3>
