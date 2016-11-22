@@ -11,11 +11,11 @@
     <div class="list-box">
             <h1>Places of interest</h1>
             <div class="search" id="search">
-                <input class="search-box" data-bind="textInput: searchTerm, valueUpdate: 'afterkeydown'"/>
+                <input class="search-box" data-bind="textInput: searchTerm"/>
             </div>
             <hr>
         <div id="list">
-                <ul id="place-list" data-bind= 'foreach: LocationList()'>
+                <ul id="place-list" data-bind= 'foreach: filteredList'>
                     <li class="list-items" data-bind= 'text: areaName, attr: {id: areaId}, click: $parent.displayDetails'>
                     </li>
                 </ul>
@@ -32,7 +32,7 @@
 </div>
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/app_js.js"></script>
     <script async defer
         src=
         "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyBMnF9xecU8CCgQW4gdDHj5wTg6JaZcOoA&v=3&callback=initMap">
