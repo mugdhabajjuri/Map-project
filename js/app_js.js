@@ -2,58 +2,69 @@
 var map;
 var marker ;
 var markers = [];
-var clientID;
-var clientSecret;
 
 //Error handling for Google Maps API
 var maperror = setTimeout(function() {
     alert("can not load maps now. check your network");
     $('#map').append('<h1>Can not load Google maps now, check your network connection</h1>');
 }, 5000);
-//Model for storing location info
+// Declaring Model with data
 var locations = [
     {
-        area: 'Railway station',
-        wikiarea: 'Secunderabad Railway Station',
+        area: 'Lumbini park',
+        wikiarea: 'Lumbini park',
         divid: 'place0',
-        lat: 17.4337,
-        lng: 78.5016,
+        lat: 17.4101,
+        lng: 78.4732,
         serialNum: 0
-    },{
+    },
+    {
         area: 'Mahatma Gandhi Bus Station',
         wikiarea: 'Mahatma Gandhi Bus Station',
         divid: 'place1',
-        lat: 17.378055,
-        lng: 78.48478439999997,
+        lat: 17.3799,
+        lng: 78.4830,
         serialNum: 1
-    },{
+    },
+    {
         area: 'Charminar',
         wikiarea: 'Charminar',
         divid: 'place2',
         lat: 17.3609976,
         lng: 78.47306320000007,
         serialNum: 2
-    },{
-        area: 'Assembly',
-        wikiarea: 'Telangana Assembly',
+    },
+    {
+        area: 'Hussain Sagar',
+        wikiarea: 'Hussain Sagar',
         divid: 'place3',
-        lat: 17.3963738,
-        lng: 78.4680902,
+        lat: 17.4239,
+        lng: 78.4738,
         serialNum: 3
-    },{
+    },
+    {
         area: 'Salarjung museum',
         wikiarea: 'Salarjung museum',
         divid: 'place4',
-        lat: 17.371265,
-        lng: 78.47810900000002,
+        lat: 17.3715,
+        lng: 78.4803,
         serialNum: 4
-    },{
+    },
+    {
         area: 'Golconda Fort',
         wikiarea: 'Golconda',
         divid: 'place5',
         lat: 17.3853626,
         lng: 78.4041297,
         serialNum: 5
+    },
+    {
+        area: 'Ramoji Film City',
+        wikiarea: 'Ramoji Film City',
+        divid: 'place6',
+        lat: 17.2543,
+        lng: 78.6808,
+        serialNum: 6
     }
 ];
 
@@ -67,24 +78,21 @@ var Location = function(data) {
     }, this);
     this.serialNum = ko.observable(data.serialNum);
     this.visible = ko.observable(true);
-
-    //The elements array will contain the short description of places obtained from Wikipedia
+    //The elements array will contain description of places obtained from Wikipedia
     this.elements = ko.observableArray([]);
     this.wikisrc = ko.observable(true);
     this.wiki = ko.computed(function() {
         var self = this;
         var wikiname = this.wikiname();
         var wikiurl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + wikiname + '&prop=revisions&rvprop=content&format=json';
-
-        //Error Handling for Wikipedia API
+        //Handling wikipedia error on timeout.
         var wikierror = setTimeout(function() {
             self.elements.push("unable to load wikipedia");
-            //localStorage is used because without it,
-            //the alert message will pop-up multiple times
-            var alert = localStorage.getItem('alert') || '';
+            //localStorage is used to avoid the error message appears multiple times
+            var alert = localStorage.getItem('alerted') || '';
             if (alert != 'yes') {
                 alert("can not connect to wikipedia,check your internet connection");
-                localStorage.setItem('alert','yes');
+                localStorage.setItem('alerted','yes');
             }
             self.wikisrc(false);
         }, 5000);
@@ -105,14 +113,14 @@ var Location = function(data) {
 var ViewModel = function() {
     var self = this;
     this.searchTerm = ko.observable("");
-    //Clearing localstorage when the page loads
     localStorage.removeItem('alerted');
+    //Location list array will hold the information on area of locations.
     this.LocationList = ko.observableArray([]);
     locations.forEach(function(area) {
         self.LocationList.push(new Location(area));
     });
-
-this.search = function(value) {
+//This function is used to filter the markers based on searched locations.
+    this.search = function(value) {
         for (var x in locations) {
             if (locations[x].area.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                 markers[x].setVisible(true);
@@ -120,7 +128,7 @@ this.search = function(value) {
         }
     };
     this.searchTerm.subscribe(self.search);
-
+//Filtered list function will filter the list of locations based on search term.
     this.filteredList = ko.computed( function() {
 
         console.log('-------------');
@@ -174,11 +182,34 @@ function initMap() {
            lat: 17.3850,
             lng: 78.4867
         },
-        zoom: 13,
-        mapTypeId: 'roadmap'
+        zoom: 11,
+        styles: [
+            {
+              featureType: 'road',
+              elementType: 'geometry.fill',
+              stylers: [{color: '#38414e'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry.fill',
+              stylers: [{color: '#1f2835'}]
+            },
+            {
+              featureType: 'transit',
+              elementType: 'geometry.fill',
+              stylers: [{color: '#2f3948'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'geometry.fill',
+              stylers: [{color: '#2471A3'}]
+            },
+          ]
     });
+
+
  clearTimeout(maperror);
- //Take title and lat-lng from model and store it in localArray
+ //LocalArray holds the map latitude and longitude and title
     var len = locations.length;
     var localArray = [];
     for(var i = 0; i < len; i++) {
@@ -207,14 +238,8 @@ function initMap() {
             animation: google.maps.Animation.DROP,
             id: j
         });
-
-
         // Push the marker to our array of markers.
         markers.push(marker);
-
-
-
-
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function() {
             generateInfoWindow(this, Infowindow);
@@ -243,7 +268,7 @@ function initMap() {
                     var StreetViewLocation = data.location.latLng;
                     var heading = google.maps.geometry.spherical.computeHeading(
                         StreetViewLocation, newmarker.position);
-                    newinfowindow.setContent('<div>' + newmarker.title + '</div><div>hi</div><div id="pano"></div>');
+                    newinfowindow.setContent('<div>' + newmarker.title + '</div><div id="streetview"></div>');
                     var panoramaOptions = {
                         position: StreetViewLocation,
                         pov: {
@@ -252,7 +277,7 @@ function initMap() {
                         }
                     };
                     var panorama = new google.maps.StreetViewPanorama(
-                        document.getElementById('pano'), panoramaOptions);
+                        document.getElementById('streetview'), panoramaOptions);
                 } else {
                     newinfowindow.setContent('<div>' + newmarker.title + '</div>' +
                         '<div>(No Street View Found)</div>');
