@@ -1,39 +1,43 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Neighbourhood Map Hyderabad</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<div class="container">
-    <div class="list-box">
-            <h1>Places of interest</h1>
+    <div class="container">
+        <div class="list-box">
+            <h1>Places to search</h1>
             <div>
-                <input class="search-box" placeholder="Search" data-bind="textInput: searchTerm"/>
+                <input class="search-box" placeholder="Search" data-bind="textInput: searchTerm" />
             </div>
             <hr>
-        <div>
-                <ul data-bind= 'foreach: filteredList'>
-                    <li class="list-items" data-bind= 'text: areaName, attr: {id: areaId}, click: $parent.displayDetails'>
+            <div>
+                <ul data-bind='foreach: filteredList'>
+                    <li class="list-items" data-bind='text: areaName, attr: {id: areaId}, click: $parent.displayPlaceDetails'>
                     </li>
                 </ul>
-                <hr><h3>Wikipedia Description</h3>
-            <div data-bind= 'foreach: LocationList()'>
-                <div class="info" data-bind= 'visible: wikiVisible, attr: {id: divId}'>
-                    <span data-bind= 'text: wikiDescription'></span>
-                    <p data-bind= 'visible: wikisrc'></p>
+                <hr>
+                <h3>Wikipedia Description</h3>
+                <div data-bind='foreach: LocationList()'>
+                    <div class="info" data-bind='visible: wikiVisible, attr: {id: wikiId}'>
+                        <span data-bind='text: wikiDescription'></span>
+                        <p data-bind='visible: wikisrc'></p>
+                    </div>
                 </div>
             </div>
         </div>
+        <div id="map"></div>
     </div>
-    <div id="map"></div>
-</div>
     <script src="js/lib/jquery.min.js"></script>
-    <script src="js/lib/knockout-3.2.0.js"></script>
+    <script src="js/lib/knockout-3.4.1.js"></script>
     <script src="js/app_js.js"></script>
-    <script async defer src= "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyA3zZ5gx887BCPz33rlt0bWSQH0DQaA0hM&v=3&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyA3zZ5gx887BCPz33rlt0bWSQH0DQaA0hM&v=3&callback=initMap">
     </script>
 </body>
+
 </html>

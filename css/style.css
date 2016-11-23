@@ -1,85 +1,81 @@
-html,body {
+html,
+body {
     font-family: Arial, sans-serif;
     height: 100%;
     margin: 0;
     padding: 0;
-  }
-   input {
+}
+input {
     font-size: 20px;
-  }
-
-  h1 {
+}
+h1 {
     color: red;
     font-size: 22px;
-  }
-  h3{
+}
+h3 {
     color: red;
-  }
-  ul {
-  padding: 0 0 0 0;
-  margin: 0 5px 0 5px;
+}
+ul {
+    padding: 0 0 0 0;
+    margin: 0 5px 0 5px;
 }
 .container {
     height: 100%;
     width: 100%;
     padding: 0;
     position: relative;
-  }
-  #map {
-    bottom:0px;
+}
+#map {
+    bottom: 0px;
     height: 100%;
-     width: 80%;
+    width: 80%;
     padding-left: 10%;
     position: absolute;
     right: 0px
-  }
-
-  .list-box {
+}
+.list-box {
     background: green;
     border: 2px solid black;
     height: 100%;
     line-height: 40px;
     text-align: center;
     width: 20%;
-  }
+}
 .search-box {
-  text-align: center;
-  cursor: text;
-  width: 95%;
-  margin-right: 5px;
+    text-align: center;
+    cursor: text;
+    width: 95%;
+    margin-right: 5px;
 }
 #streetview {
-  width: 200px;
-  height: 200px;
+    width: 200px;
+    height: 200px;
 }
-
 .list-items {
-  background-color: white;
-  cursor: pointer;
-  list-style: none;
-  width: 100%;
-  border-bottom: 2px solid black;
-  position: relative;
+    background-color: white;
+    cursor: pointer;
+    list-style: none;
+    width: 100%;
+    border-bottom: 2px solid black;
+    position: relative;
 }
-
 .list-items:hover {
-  background-color: green;
+    background-color: green;
 }
-
 .info {
-  background-color: white;
-  font-size: 12px;
-  width: 99%;
-  line-height: 26px;
-  padding: 0 2px 0 2px;
+    background-color: white;
+    font-size: 12px;
+    width: 99%;
+    line-height: 26px;
+    padding: 0 2px 0 2px;
 }
-
 @media screen and (max-width: 480px) {
-
-  li {
-    font-size: 10px;
-  }
-  h1,h3 {
-    font-size: 15px;
-    font-weight: bolder;
-  }
+    li {
+        font-size: 15px;
+    }
+    h1,
+    h3 {
+        font-size: 15px;
+        font-weight: bolder;
+    }
+}
