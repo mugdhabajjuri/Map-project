@@ -3,10 +3,9 @@ var map;
 var marker;
 var markers = [];
 //Error handling for Google Maps API
-var maperror = setTimeout(function() {
-   alert("can not load maps now. check your network");
-   $('#map').append('<h1>Can not load Google maps now, check your network connection</h1>');
-}, 5000);
+function maperror() {
+   alert("Google Maps has failed to load. Please check your internet connection and try again.");
+}
 // Declaring Model with data
 var locations = [{
    area: 'Lumbini park',
@@ -75,17 +74,6 @@ var Location = function(data) {
       var self = this;
       var wikiname = this.wikiname();
       var wikiurl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + wikiname + '&prop=revisions&rvprop=content&format=json';
-      //Handling wikipedia error on timeout.
-      var wikierror = setTimeout(function() {
-         self.elements.push("unable to load wikipedia");
-         //localStorage is used to avoid the error message appears multiple times
-         var check = localStorage.getItem('check') || '';
-         if (check != 'yes') {
-            alert("can not connect to wikipedia,check your internet connection");
-            localStorage.setItem('check', 'yes');
-         }
-         self.wikisrc(false);
-      }, 5000);
       $.ajax({
          url: wikiurl,
          dataType: 'jsonp',
@@ -93,8 +81,9 @@ var Location = function(data) {
          var wikistories = results[2];
          wikielements = wikistories[0];
          self.elements.push(wikielements);
-         clearTimeout(wikierror);
-      });
+      }).fail(function( jqXHR, textStatus) {
+      alert("wikipedia can not be loaded,check your network connection.");
+   });
    }, this);
    this.wikiVisible = ko.observable(false);
    this.wikiDescription = ko.observable('');
@@ -196,7 +185,6 @@ function initMap() {
          }]
       }, ]
    });
-   clearTimeout(maperror);
    //LocalArray holds the map latitude and longitude and title
    var len = locations.length;
    var localArray = [];
